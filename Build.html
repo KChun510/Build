@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+		body {
+			background-color: rgb(0, 0, 0);
+		}
+	</style>
+
+    <py-config>
+        packages = ["pandas"]
+    </py-config>
+
+
+    <title>Weekly Health Plan</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning text-dark">
+      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
+      </svg>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link text-dark" href="http://localhost:8080/index.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="http://localhost:8080/build.html">Weekly Health</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="http://localhost:8080/Breathing.html">Deep Breathing</a>
+            </li>
+            <li class="nav-item dropdown text-dark">
+              <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Extra Resources
+              </a>
+              <div class="dropdown-menu bg-warning" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item text-dark" href="https://www.rotacarebayarea.org/clinics">Free Medical Clinics</a>
+                <a class="dropdown-item text-dark" href="https://mindfulhealthsolutions.com/locations/bay_area/">Mental Health Clinics</a>
+                <a class="dropdown-item text-dark" href="https://www.cdc.gov/physicalactivity/basics/adults/index.htm#:~:text=Each%20week%20adults%20need%20150,Physical%20Activity%20Guidelines%20for%20Americans.&text=We%20know%20150%20minutes%20of,do%20it%20all%20at%20once">CDC Artical (Physical)</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+    <div class="row">
+        <div class="col ml-4 pt-3">
+            <h1 class = "text-warning "> Health Plan Builder </h1>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col"></div>
+          <div class="col-md-auto">
+                <h1 class = "text-warning">How many hours do you work per week?</h1>
+                <div class="input-group">
+                <input type="text" class="form-control" id="hours" name="hours" placeholder="Enter hours" for="hours">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-warning" id="save-button">Save</button>
+                    
+                    <button type="button" class="btn btn-outline-warning" py-click = "write_to_page()">Build</button>
+                </div>
+                </div>
+          </div>
+          <div class="col"></div>
+        </div>
+      </div>
+    
+      
+    <!--Out put needed phys time-->
+    <div class="row py-2">
+        <div class="col-lg-auto mx-auto mt-3">
+            <h1 class = "text-secondary" id="time_output"></h1>
+        </div>
+    </div>
+
+    <!-- row for physical acvtivities -->
+    <div class="row py-2">
+        <div class="col mx-4">
+            <h3 class = "text-secondary" id="physical_header"><u></u></h3>
+        </div>
+    </div>
+    <div class="row py-2">
+        <!--Name-->
+        <div class="col-sm-auto ml-4">
+            <h5 class = "text-secondary" id = "physical_name"></h5>
+
+        </div>
+        <!--description-->
+        <div class="col-sm-auto">
+            <p class = "text-secondary" id = "physical_description" ></p>
+
+        </div>
+            <!--link-->
+        <div class="col-sm">
+            <a class = "text-secondary" id = "physical_link" ></a>
+        </div>
+    </div>
+    
+
+    <!-- row for workouts -->
+    <div class="row py-2">
+        <div class="col-lg-auto mx-4">
+            <h3 class = "text-secondary" id="workouts_header"><u></u></h3>
+        </div>    
+    </div>
+    <div class="row">
+        <!--Name-->
+        <div class="col-sm-auto ml-4">
+            <h5 class = "text-secondary" id = "workouts_name"></h5>
+        </div>
+        <!--description-->
+        <div class="col-sm-auto">
+            <p class = "text-secondary" id = "workouts_description"></p>
+
+        </div>
+            <!--link-->
+        <div class="col-sm">
+            <a class = "text-secondary" id = "workouts_link"></a>
+        </div>
+    </div>
+
+
+    <!-- row for recipes -->
+    <div class="row py-2">
+        <div class="col-lg-auto ml-4">
+            <h3 class = "text-secondary" id="recipe_header"><u></u></h3>
+        </div>
+    </div>
+    <div class="row">
+        <!--Name-->
+        <div class="col-sm-auto ml-4">
+            <h5 class = "text-secondary" id = "recipe_name"></h5>
+
+        </div>
+        <!--description-->
+        <div class="col-sm-auto">
+            <p class = "text-secondary" id = "recipe_description"></p>
+
+        </div>
+            <!--link-->
+        <div class="col-sm">
+            <a class = "text-secondary" id = "recipe_link"></a>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md mt-5 mx-5">
+            <p class="text-center text-warning">
+                Click "Build" to get the minimum hours of activity needed based on your weekly work hours (e.g. 4 hours of sitting = 30 mins of activity). You'll also get a randomized list of physical activities, workouts, and healthy meals to keep your weekly plan fresh!
+            </p>
+        </div>
+    </div>
+
+  
+    
+    <py-script>
+import pandas as pd
+import numpy as np
+import random 
+from pyodide.http import open_url
+from js import hours 
+
+url_content = open_url("https://raw.githubusercontent.com/KChun510/Hackathon_CSV_BeeLikeCoders/main/Hackathon_CSV%20-%20Sheet1.csv")
+ 
+df = pd.read_csv(url_content) #Import out CSV to pandas DataFrame
+csv = Element('csv')
+#csv.write(df)
+
+activity = df['Activity'].tolist()
+description	= df["Description"].tolist()
+link = df["Link"].tolist()
+repeat = []
+
+#For every 8 hours of sitting requires at least one hour of exersice
+if(hours.value):
+    physical_time = int(hours.value) / 8
+
+
+def write_to_page():
+    physical_name = Element("physical_name")
+    physical_description = Element("physical_description")
+    physical_link = Element("physical_link")
+
+    workouts_name = Element("workouts_name")
+    workouts_description = Element("workouts_description")
+    workouts_link = Element("workouts_link")
+
+    recipe_name = Element("recipe_name")
+    recipe_description = Element("recipe_description")
+    recipe_link = Element("recipe_link")
+    
+    
+    
+    physical_name.element.innerText = ""
+    physical_description.element.innerText = ""
+    physical_link.element.innerText = ""
+
+    workouts_name.element.innerText = ""
+    workouts_description.element.innerText = ""
+    workouts_link.element.innerText = ""
+
+    recipe_name.element.innerText = ""
+    recipe_description.element.innerText = ""
+    recipe_link.element.innerText = ""
+
+    if(hours.value):
+        min = 0
+        max = 9
+        tmp = -1
+        time_header = Element("time_output")
+        time_header.element.innerText = f"Needed activity: {physical_time}hrs weekly"
+        
+        #Fillig our physical div
+        physical_header = Element("physical_header")
+        physical_header.element.innerText = "Physical Activitys"
+        
+        
+
+        for i in range(int(physical_time)):
+            rand_int = random.randint(min, max)
+            if(rand_int not in repeat):
+                physical_name.element.innerText += activity[rand_int] + "\n"
+                physical_description.element.innerText += description[rand_int] + "\n"
+                physical_link.element.innerText += link[rand_int] + "\n"
+                repeat.append(rand_int);
+
+        repeat.clear()
+
+        min = 11
+        max = 20
+        #Filling our workouts div
+        workouts_header = Element("workouts_header")
+        workouts_header.element.innerText = "Workouts"
+        
+
+        for i in range(int(physical_time)):
+            rand_int = random.randint(min,max)
+            if(rand_int not in repeat):
+                workouts_name.element.innerText += activity[rand_int] + "\n"
+                workouts_description.element.innerText += description[rand_int] + "\n"
+                workouts_link.element.innerText += link[rand_int] + "\n"
+                repeat.append(rand_int);
+
+        repeat.clear()
+        
+        min = 22
+        max = 31
+        #Filling our recipe div
+        recipe_header = Element("recipe_header")
+        recipe_header.element.innerText = "Healthy Meals"
+        
+
+        for i in range(3):
+            rand_int = random.randint(min,max)
+            if(rand_int not in repeat):
+
+                recipe_name.element.innerText += activity[rand_int] + "\n"
+                recipe_description.element.innerText += description[rand_int] + "\n"
+                recipe_link.element.innerText += link[rand_int] + "\n"
+                repeat.append(rand_int);
+                
+
+        repeat.clear()
+    
+
+            
+
+    
+
+    </py-script>
+
+    
+</body>
+    <script src = "data.js"></script>
+</html>
